@@ -1,0 +1,5 @@
+const size_levels=["Bytes","Kilobytes","Megabytes","Gigabytes"]
+const through_levels=["Bases","Kilobases","Megabases","Gigabases"]
+const notes_message_1a="These estimations are based on the read length and on the maximum number of sequenced fragments expected for a given platform and chemistry combination according to the technology provider. The FASTQ data sizes are calculated taking into account a sequence identifier length of 66 characters."
+const notes_message_1b="These estimations are based on the total number of reads selected and do not consider whether a single read or a pair of reads is being obtained from each sequenced DNA fragment (single-end or paired-end sequencing format, respectively)."
+const notes_message_2="The GZIP compression rate will vary depending on the DNA sequence complexity."

@@ -1,0 +1,116 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FASTQ size</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main_style.css">
+  <script src="js/jquery-3.6.0.min.js"></script>
+  <script src="js/input_data.js"></script>
+  <script src="js/panel_vars.js"></script>
+  <script src="js/panel_functions.js"></script>
+  <script src="js/main.js"></script>
+
+</head>
+
+<body>
+
+<header>
+  <h1>NGS Data Size</h1>
+  <h2>For different sequence properties and NGS platforms</h2>
+</header>
+
+<div id="outer-container">
+
+  <div id="input_bar">
+
+    <div id=How_div> <br> <form id="How">
+      <h3>How will we estimate?</h3>
+      <input type="radio" id="by_seq_props" name="How_selector" value="1" onchange="go_to_by_props()">
+      <label for="seq_props">By sequence properties</label><br>
+
+      <input type="radio" id="by_platform" name="How_selector" value="2" onchange="go_to_by_plat()">
+      <label for="platform">By sequencing platform</label>
+      <br><br>
+    </form> </div>
+
+
+
+    <div id="condpanel1" class="condpanel"><br>
+        <label for="read_len">Read length</label>
+        <input type="text" id="read_len" name="read_len" >
+        <label for="no_reads">Total number of reads</label>
+        <input type="text" id="no_reads" name="no_reads">
+        <label for="no_reads">Sequence identifier length</label>
+        <input type="text" id="read_id_len" name="read_id_len">
+    </div>
+
+
+    <div id="condpanel2" class="condpanel"><br>
+
+        <label for="platform">Choose a sequencing platform</label>
+        <select name="platform" id="platform"></select>
+        <label for="chemistry">Chemistries for this platform</label>
+        <select name="chemistry" id="chemistry"></select>
+        <label for="chem_length">Available read lengths</label>
+        <select name="chem_length" id="chem_length"></select>
+        <label for="samples">Number of samples</label>
+        <input type="text" id="samples" name="samples">  
+        <br>
+        <div id="if_both_formats">
+          <p>Select a sequencing format</p>
+          <label for="single">single-end</label>
+          <input type="radio" id="single" name="fmt_select" value="1">
+          <label for="paired">paired-end</label>
+          <input type="radio" id="paired" name="fmt_select" value="2">
+        </div>
+
+    </div>
+
+  </div>
+  
+  <div id="output_space">
+
+    <br><div class="message_space"><p id="calc_message" class="message">...</p></div>
+
+    <div id="tables_space">
+      <div class="one_table_space">
+        <h4>Sequencing throughput</h4>
+
+        <div><p id="frags_message" class="out_if_by_plat">...</p>
+        <p id="reads_message" class="out_if_by_plat">...</p></div>
+        <table id="throughput_table"></table>
+      </div>
+      <div class="one_table_space">
+        <h4>FASTQ data size</h4>
+        <table id="sizes_table"></table>
+      </div>
+    </div><br>
+
+    <div class="message_space">
+    <p id="notes_message"></p><br>
+    <a id="plat_info" class="out_if_by_plat" href="">More about this platform/sequencing chemistry</a><br>
+    <a href="http://www.softpanorama.org/HPC/DNA_sequencing/Genomic_data_compression/index.shtml">More about GZIP compression</a>
+  </div><br>
+
+  </div>
+</div>
+
+<footer>
+  <div class="devmessage">
+    <p>Developed by Aurora Labastida </p>
+      <div class="devicons">
+      <a href="https://github.com/auroralabastida/"><img src="img/github.png" title="GitHub account" height="60" /></a>
+      <a href="https://www.linkedin.com/in/aurora-labastida-mart%C3%ADnez/"><img src="img/linkedin.png" title="LinkedIn account" height="60" /></a>
+    </div>
+    <p> Open source - AGPL-3.0 licence.</p>
+  </div>
+</footer>
+</body>
+</html>
