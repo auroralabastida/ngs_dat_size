@@ -1,9 +1,10 @@
 
 var read_len=100, no_reads=20000000, read_id_len=66;
-var this_platform=Platform[0], this_chemistry=Chemistry_details[0], this_len=Read_Length[0]
+var this_platform=Platform[3], this_chemistry=Chemistry_details[3];
+var this_len=typical_len[3];
 var u_Platform=Platform.filter(onlyUnique)
-var seq_fmt="single", mode=1, no_samples=1
-var no_frags=max_fragments[0], no_reads=max_fragments[0]
+var seq_fmt="paired", mode=2, no_samples=1
+var no_frags=max_frags[3], no_reads=max_frags[3]
 
 
 $(document).ready(function() {
@@ -15,6 +16,7 @@ $(document).ready(function() {
     addOptions("platform", u_Platform)
     document.getElementById("by_platform").checked = true;
     document.getElementById("single").checked = true;
+    selectElement("platform", this_platform) 
 
     selectElement('samples', no_samples)
 
@@ -106,7 +108,7 @@ function go_to_by_plat(){
 
     $('.out_if_by_plat').show(); 
 
-    charge_chems(this_platform)
+    charge_chems()
 
     document.getElementById("notes_message").innerHTML = notes_message_1a+" "+notes_message_2
 
@@ -134,31 +136,28 @@ function charge_chems(){
 
     var i_plat=getAllIndexes(Platform, this_platform)
     var chems=select_w_indexarr(i_plat, Chemistry_details)
-    var u_chems=chems.filter(onlyUnique)
 
-    this_chemistry=u_chems[0]
+    this_chemistry=chems[0]
 
-    addOptions("chemistry", u_chems)
+    addOptions("chemistry", chems)
     selectElement("chemistry", this_chemistry) 
 
-    charge_lens(u_chems[0])
-
+    charge_lens()
 }
 
 function charge_lens(){
 
     $("#chem_length").empty()
 
-    var i_chems=getAllIndexes(Chemistry_details, this_chemistry)
-    var lens=select_w_indexarr(i_chems, Read_Length)
-    var u_lens=lens.filter(onlyUnique)
+    var i_chems=Chemistry_details.indexOf(this_chemistry)
+    var lens=typical_len[i_chems].split(";")
 
-    this_len=u_lens[0]
+    this_len=lens[0]
 
-    addOptions("chem_length", u_lens)
+    addOptions("chem_length", lens)
     selectElement("chem_length", this_len) 
     
-    do_by_plat(this_chemistry, this_len)
+    do_by_plat()
 
 }
 
@@ -166,18 +165,17 @@ var calc_message="", format_message=""
 
 function do_by_plat(){
 
-    var i_chems=getAllIndexes(Chemistry_details, this_chemistry)
-    var working_idx=idx_of_match(Read_Length, this_len, i_chems)
-    no_frags=Number(max_fragments[working_idx])
-    seq_fmt_opts=Sequence_format[working_idx]
-    plat_info=Source[working_idx]
+    i_chems=Chemistry_details.indexOf(this_chemistry)
+    no_frags=Number(max_frags[i_chems])
+    seq_fmt_opts=paired_avail[i_chems]
+    plat_info=Source[i_chems]
 
     display_format_opts()
 
     no_reads=(no_frags*mode)/no_samples
 
     console.log("do_by_plat: ")
-    console.log(this_chemistry+" "+this_len+" "+seq_fmt+" "+no_frags+" "+no_reads+" "+no_samples)
+    console.log(this_platform+" "+this_chemistry+" "+this_len+" "+seq_fmt+" "+no_frags+" "+no_reads+" "+no_samples)
    
     calc_message="Data generated "
     if(no_samples==1) calc_message=calc_message+"in a <em>whole sequencing run</em> with the <em>"
@@ -202,27 +200,29 @@ function do_by_plat(){
 
 function display_format_opts(){
 
-    $("#seq_format").hide();
-    $("#if_one_format").hide(); $("#if_both_formats").hide()
-    $("#seq_format").show();
+    $("#if_both_formats").hide()
     format_message=""
-    if(seq_fmt_opts != "both")
+    if(seq_fmt_opts == "yes" && mode==2)
     {
-        if(seq_fmt_opts=="single"){
-            seq_fmt="single"; mode=1
-            document.getElementById("single").checked = true  }
+        seq_fmt="paired";
+        format_message="Both the <em>single and paired-end</em> sequencing formats <em>are available</em> with these technical options."
+        document.getElementById("paired").checked = true
+        $("#if_both_formats").show()
 
-        if(seq_fmt_opts=="paired"){ 
-            seq_fmt="paired"; mode=2
-            document.getElementById("paired").checked = true  }
-
-        format_message="Only the <em>"+seq_fmt+"-end format is available</em> with these technical options."
-        $("#if_one_format").show()
     }
-    else
+    if(seq_fmt_opts == "yes" && mode==1)
     {
-        $("#if_both_formats").show() 
-        if(mode==1) seq_fmt="single"; else seq_fmt="paired"
-        format_message="Both the <em>single and paired-end</em> sequencing formats <em>are available</em> with these technical options."     
+        seq_fmt="single";
+        format_message="Both the <em>single and paired-end</em> sequencing formats <em>are available</em> with these technical options."
+        document.getElementById("single").checked = true
+        $("#if_both_formats").show()
+
+    }
+    if(seq_fmt_opts == "no")
+    {
+        seq_fmt="single"; mode=1
+        format_message="Only the <em>"+seq_fmt+"-end format is available</em> with these technical options."
+        document.getElementById("single").checked = true
+        $("#if_both_formats").hide()
     }
 }
