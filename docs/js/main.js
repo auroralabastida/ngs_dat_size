@@ -1,7 +1,7 @@
 
 var read_len=100, no_reads=20000000, read_id_len=66;
 var this_platform=Platform[3], this_chemistry=Chemistry_details[3];
-var this_len=typical_len[3];
+var this_len=typical_len[3]; max_lanes=Lanes[3]; this_lanes=Lanes[3]
 var u_Platform=Platform.filter(onlyUnique)
 var seq_fmt="paired", mode=2, no_samples=1
 var no_frags=max_frags[3], no_reads=max_frags[3]
@@ -17,8 +17,9 @@ $(document).ready(function() {
     document.getElementById("by_platform").checked = true;
     document.getElementById("single").checked = true;
     selectElement("platform", this_platform) 
-
     selectElement('samples', no_samples)
+
+    lanes_change("lanes", max_lanes, this_lanes, "max_lanes_p", "lanes_bubble")
 
     go_to_by_plat();
 
@@ -60,6 +61,11 @@ $(document).ready(function() {
         this_chemistry=chemistry_element.value
         charge_lens()  
         });
+
+    var lanes_element = document.getElementById("lanes");
+    lanes_element.addEventListener('change', (event) => { 
+        this_lanes=lanes_element.value
+        do_by_plat()  });
 
     var chem_len_element = document.getElementById("chem_length");
     chem_len_element.addEventListener('change', (event) => { 
@@ -142,15 +148,23 @@ function charge_chems(){
     addOptions("chemistry", chems)
     selectElement("chemistry", this_chemistry) 
 
+
     charge_lens()
 }
 
 function charge_lens(){
 
     $("#chem_length").empty()
+    $("#if_lanes").hide()
 
     var i_chems=Chemistry_details.indexOf(this_chemistry)
     var lens=typical_len[i_chems].split(";")
+    var lanes=Lanes[i_chems]
+
+    max_lanes=lanes, this_lanes=lanes
+    lanes_change("lanes", max_lanes, this_lanes, "max_lanes_p", "lanes_bubble")
+
+    if(lanes > 1) $("#if_lanes").show()
 
     this_len=lens[0]
 
@@ -166,16 +180,23 @@ var calc_message="", format_message=""
 function do_by_plat(){
 
     i_chems=Chemistry_details.indexOf(this_chemistry)
-    no_frags=Number(max_frags[i_chems])
     seq_fmt_opts=paired_avail[i_chems]
     plat_info=Source[i_chems]
 
     display_format_opts()
 
+    lanes_change("lanes", max_lanes, this_lanes, "max_lanes_p", "lanes_bubble")
+
+    lanes_factor=(1/max_lanes)*this_lanes
+
+    no_frags=Number(max_frags[i_chems])*lanes_factor
+
     no_reads=(no_frags*mode)/no_samples
 
     console.log("do_by_plat: ")
-    console.log(this_platform+" "+this_chemistry+" "+this_len+" "+seq_fmt+" "+no_frags+" "+no_reads+" "+no_samples)
+    console.log(this_platform+" "+this_chemistry+" "+seq_fmt+"-"+this_len+
+        " frag:"+no_frags+" read:"+no_reads+" samp:"+no_samples+
+        " lanes:"+this_lanes+"of"+max_lanes)
    
     calc_message="Data generated "
     if(no_samples==1) calc_message=calc_message+"in a <em>whole sequencing run</em> with the <em>"

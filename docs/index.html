@@ -31,19 +31,17 @@
 
   <div id="input_bar">
 
-    <div id=How_div> <br> <form id="How">
+    <div id=How_div><form id="How">
       <h3>How will we estimate?</h3>
       <input type="radio" id="by_seq_props" name="How_selector" value="1" onchange="go_to_by_props()">
       <label for="seq_props">By sequence properties</label><br>
 
       <input type="radio" id="by_platform" name="How_selector" value="2" onchange="go_to_by_plat()">
       <label for="platform">By sequencing platform</label>
-      <br><br>
     </form> </div>
+    <hr>
 
-
-
-    <div id="condpanel1" class="condpanel"><br>
+    <div id="condpanel1" class="condpanel">
         <label for="read_len">Read length</label>
         <input type="text" id="read_len" name="read_len" >
         <label for="no_reads">Total number of reads</label>
@@ -53,9 +51,9 @@
     </div>
 
 
-    <div id="condpanel2" class="condpanel"><br>
+    <div id="condpanel2" class="condpanel">
 
-        <label for="platform">Choose a sequencing platform</label>
+        <label for="platform">Sequencing platform</label>
         <select name="platform" id="platform"></select>
         <label for="chemistry">Chemistries for this platform</label>
         <select name="chemistry" id="chemistry"></select>
@@ -63,13 +61,25 @@
         <select name="chem_length" id="chem_length"></select>
         <label for="samples">Number of samples</label>
         <input type="text" id="samples" name="samples">  
-        <br>
-        <div id="if_both_formats">
-          <p>Select a sequencing format</p>
-          <label for="single">single-end</label>
-          <input type="radio" id="single" name="fmt_select" value="1">
-          <label for="paired">paired-end</label>
-          <input type="radio" id="paired" name="fmt_select" value="2">
+        <div id="if_both_formats" class="if">
+          <hr>
+          <p>Sequencing format</p>
+          <div>
+            <label for="single">single-end</label>
+            <input type="radio" id="single" name="fmt_select" value="1">
+            <label for="paired">paired-end</label>
+            <input type="radio" id="paired" name="fmt_select" value="2">
+          </div>
+        </div>
+        <div id="if_lanes" class="if">
+          <hr>
+          <p>This Flow Cell has multiple lanes</p>
+          <p>Number of lanes to use</p>
+             <div id="slider_div"> 
+                <div id="base_lane"></div>
+                <input type="range" id="lanes" name="lanes" class="slider"> 
+                <div class="bubble"><p id="lanes_bubble"></p></div> 
+             </div>
         </div>
 
     </div>
@@ -78,7 +88,7 @@
   
   <div id="output_space">
 
-    <br><div class="message_space"><p id="calc_message" class="message">...</p></div>
+    <div class="message_space"><p id="calc_message" class="message">...</p></div>
 
     <div id="tables_space">
       <div class="one_table_space">
@@ -112,7 +122,7 @@
     </div>
     <p> Open source - AGPL-3.0 licence.</p>
   </div>
-  <div class="devmessage"><p>Last update: November 8, 2021</p></div>
+  <div class="devmessage"><p>Last update: November 18, 2021</p></div>
 </footer>
 </body>
 </html>

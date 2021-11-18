@@ -15,6 +15,25 @@ function selectElement(id, valueToSelect) {
     element.value = valueToSelect;
 }
 
+// Show current slide value in bubble
+function slideBubble(slide, bubble) {
+  const val = Number(slide.value);
+  const min = slide.min ? slide.min : 0;
+  const max = slide.max ? slide.max : 100;
+  const newVal = Number(((val - min) * 100) / (max - min));
+  document.getElementById(bubble).innerHTML = val;
+}
+
+function lanes_change(slider, max_lanes, this_lanes, max_label, bubble){
+    var lanes_element = document.getElementById(slider);
+    lanes_element.min=1, lanes_element.max=max_lanes; lanes_element.value=this_lanes;
+    y=60*(max_lanes-1)
+    lanes_element.style.width = y+"px"; 
+    slideBubble(lanes_element, bubble)
+
+
+}
+
 // Apply unique to an array
 
 function onlyUnique(value, index, self) {
